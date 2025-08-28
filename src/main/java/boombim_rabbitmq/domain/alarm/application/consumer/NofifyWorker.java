@@ -28,7 +28,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PushWorker {
+public class NofifyWorker {
 
     private final AlarmRepository alarmRepository;
     private final FcmTokenRepository fcmTokenRepository;
