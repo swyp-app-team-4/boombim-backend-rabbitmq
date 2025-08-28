@@ -8,9 +8,9 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - RABBITMQ_HOST=rabbitmq   # 컨테이너 이름
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
     depends_on:
       - rabbitmq
 
