@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 public class RabbitMQConfig {
 
-    public static final String EXCHANGE_PUSH = "notify.direct";
+    public static final String EXCHANGE_PUSH = "push.direct";
 
     // === 공지 알림 ===
     public static final String RK_NOTIFY_NOW   = "notify.now";
