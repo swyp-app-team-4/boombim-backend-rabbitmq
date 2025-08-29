@@ -43,8 +43,19 @@ public class NofifyWorker {
     @RabbitListener(queues = RabbitMQConfig.Q_PUSH_NOW)
     public void onPushNow(NotifyMessage msg) {
         Long alarmId = msg.getAlarmId();
-        Alarm alarm = alarmRepository.findById(alarmId)
-                .orElseThrow(() -> new IllegalStateException("Alarm not found: " + alarmId));
+        Alarm alarm = null;
+
+        // === (1) Alarm 조회: 최대 3번까지 재시도 (200ms 간격) ===
+        for (int i = 0; i < 3; i++) {
+            alarm = alarmRepository.findById(alarmId).orElse(null);
+            if (alarm != null) break;
+            try {
+                Thread.sleep(200); // DB commit 대기
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
 
         try {
             // 상태 업데이트: SENDING
