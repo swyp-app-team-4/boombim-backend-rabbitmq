@@ -14,26 +14,11 @@ public class PushProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void publishNow(NotifyMessage msg) {
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE_PUSH,
-                RabbitMQConfig.RK_PUSH_NOW,
-                msg
-        );
-    }
-
-    public void publishEndVote(EndVoteMessage msg) {
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE_PUSH,
-                RabbitMQConfig.RK_END_VOTE,
-                msg
-        );
-    }
     // 재시도 큐로 지연 발행 (per-message TTL)
     public void publishRetry(NotifyMessage msg, long delayMillis) {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE_PUSH,
-                RabbitMQConfig.RK_PUSH_RETRY,
+                RabbitMQConfig.RK_NOTIFY_RETRY,
                 msg,
                 m -> {
                     m.getMessageProperties().setExpiration(String.valueOf(delayMillis));

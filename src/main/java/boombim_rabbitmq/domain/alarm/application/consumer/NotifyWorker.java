@@ -22,7 +22,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NofifyWorker {
+public class NotifyWorker {
 
     private final AlarmRepository alarmRepository;
     private final FcmTokenRepository fcmTokenRepository;
@@ -33,8 +33,8 @@ public class NofifyWorker {
     private static final int MAX_RETRY = 4; // 0~4 → 총 5회
     private static final int BATCH_SIZE = 500;
 
-    @RabbitListener(queues = RabbitMQConfig.Q_PUSH_NOW)
-    public void onPushNow(NotifyMessage msg) {
+    @RabbitListener(queues = RabbitMQConfig.Q_NOTIFY_NOW)
+    public void onNotify(NotifyMessage msg) {
         Long alarmId = msg.getAlarmId();
         Alarm alarm = findAlarmWithRetry(alarmId);
 

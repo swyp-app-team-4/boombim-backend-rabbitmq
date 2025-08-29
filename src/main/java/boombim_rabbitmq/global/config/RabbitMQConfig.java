@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 public class RabbitMQConfig {
 
-    public static final String EXCHANGE_PUSH = "push.direct";
+    public static final String EXCHANGE_PUSH = "notify.direct";
 
     // === 공지 알림 ===
-    public static final String RK_PUSH_NOW   = "push.now";
-    public static final String RK_PUSH_RETRY = "push.retry";
-    public static final String Q_PUSH_NOW    = "push.now";
-    public static final String Q_PUSH_RETRY  = "push.retry";
+    public static final String RK_NOTIFY_NOW   = "notify.now";
+    public static final String RK_NOTIFY_RETRY = "notify.retry";
+    public static final String Q_NOTIFY_NOW    = "notify.now";
+    public static final String Q_NOTIFY_RETRY  = "notify.retry";
 
     // === 투표 종료 알림 ===
     public static final String RK_END_VOTE   = "push.endvote";
@@ -31,16 +31,16 @@ public class RabbitMQConfig {
 
     // 공지 즉시 큐
     @Bean
-    public Queue pushNowQueue() {
-        return QueueBuilder.durable(Q_PUSH_NOW).build();
+    public Queue notifyNowQueue() {
+        return QueueBuilder.durable(Q_NOTIFY_NOW).build();
     }
 
     // 공지 재시도 큐
     @Bean
-    public Queue pushRetryQueue() {
-        return QueueBuilder.durable(Q_PUSH_RETRY)
+    public Queue notifyRetryQueue() {
+        return QueueBuilder.durable(Q_NOTIFY_RETRY)
                 .withArgument("x-dead-letter-exchange", EXCHANGE_PUSH)
-                .withArgument("x-dead-letter-routing-key", RK_PUSH_NOW)
+                .withArgument("x-dead-letter-routing-key", RK_NOTIFY_NOW)
                 .build();
     }
 
@@ -52,24 +52,24 @@ public class RabbitMQConfig {
 
     // --- 익스체인지 ---
     @Bean
-    public DirectExchange pushExchange() {
+    public DirectExchange notifyExchange() {
         return new DirectExchange(EXCHANGE_PUSH, true, false);
     }
 
     // --- 바인딩 ---
     @Bean
-    public Binding bindPushNow() {
-        return BindingBuilder.bind(pushNowQueue()).to(pushExchange()).with(RK_PUSH_NOW);
+    public Binding bindNotifyNow() {
+        return BindingBuilder.bind(notifyNowQueue()).to(notifyExchange()).with(RK_NOTIFY_NOW);
     }
 
     @Bean
-    public Binding bindPushRetry() {
-        return BindingBuilder.bind(pushRetryQueue()).to(pushExchange()).with(RK_PUSH_RETRY);
+    public Binding bindNotifyRetry() {
+        return BindingBuilder.bind(notifyRetryQueue()).to(notifyExchange()).with(RK_NOTIFY_RETRY);
     }
 
     @Bean
     public Binding bindEndVote() {
-        return BindingBuilder.bind(endVoteQueue()).to(pushExchange()).with(RK_END_VOTE);
+        return BindingBuilder.bind(endVoteQueue()).to(notifyExchange()).with(RK_END_VOTE);
     }
 
     // --- 메시지 컨버터 ---
