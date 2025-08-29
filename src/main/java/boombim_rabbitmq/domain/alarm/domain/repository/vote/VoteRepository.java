@@ -1,7 +1,6 @@
 package boombim_rabbitmq.domain.alarm.domain.repository.vote;
 
 
-
 import boombim_rabbitmq.domain.alarm.domain.entity.member.Member;
 import boombim_rabbitmq.domain.alarm.domain.entity.vote.Vote;
 import boombim_rabbitmq.domain.alarm.domain.entity.vote.type.VoteStatus;
@@ -28,12 +27,12 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
-        update Vote v
-           set v.voteStatus = :end, v.isVoteActivate = false
-         where v.voteStatus = :progress
-         and v.isVoteActivate = true
-           and v.endTime <= :now
-    """)
+                update Vote v
+                   set v.voteStatus = :end, v.isVoteActivate = false
+                 where v.voteStatus = :progress
+                 and v.isVoteActivate = true
+                   and v.endTime <= :now
+            """)
     int bulkCloseExpired(@Param("progress") VoteStatus progress,
                          @Param("end") VoteStatus end,
                          @Param("now") LocalDateTime now);
@@ -44,6 +43,10 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findByVoteStatusAndEndTimeLessThanEqual(VoteStatus status, LocalDateTime now);
 
     List<Vote> findByPassivityAlarmFlagTrue();
+
+
+    @Query("select v from Vote v join fetch v.member where v.id = :id")
+    Optional<Vote> findByIdWithMember(@Param("id") Long id);
 
 
 }

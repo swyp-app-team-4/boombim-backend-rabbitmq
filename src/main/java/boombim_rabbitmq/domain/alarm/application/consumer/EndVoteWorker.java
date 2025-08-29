@@ -52,8 +52,9 @@ public class EndVoteWorker {
     public void onEndVote(EndVoteMessage msg) {
         log.info("투표 종료 알림 처리 시작: voteId={}, isQuestioner={}", msg.getVoteId(), msg.isQuestioner());
 
-        Vote vote = voteRepository.findById(msg.getVoteId())
+        Vote vote = voteRepository.findByIdWithMember(msg.getVoteId())
                 .orElseThrow(() -> new BoombimException(ErrorCode.VOTE_NOT_EXIST));
+
 
         Member sender = userRepository.findById(adminId)
                 .orElseThrow(() -> new BoombimException(ErrorCode.USER_NOT_EXIST));
