@@ -39,6 +39,10 @@ spring:
     requested-heartbeat: 30
     connection-timeout: 5000
 
+    listener:
+      simple:
+        default-requeue-rejected: false   # ❌ 실패 메시지 재큐잉 방지
+
 
 
 logging:
