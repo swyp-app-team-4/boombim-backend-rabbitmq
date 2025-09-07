@@ -81,7 +81,7 @@ public class EndVoteWorker {
                 : "[투표 종료] 투표자 알림";
 
         String body = msg.isQuestioner()
-                ? vote.getPosName()+ "혼잡도 투표가 종료되었습니다."
+                ? vote.getPosName()+ " 혼잡도 투표가 종료되었습니다."
                 : "참여한 투표가 종료되었습니다.";
 
         Alarm alarm = alarmRepository.save(Alarm.builder()
