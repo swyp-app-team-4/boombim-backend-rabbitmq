@@ -48,7 +48,7 @@ public class EndVoteWorker {
     @Value("${admin.id}")
     private String adminId;
 
-    @RabbitListener(queues = RabbitMQConfig.Q_END_VOTE, concurrency = "3-5")
+    @RabbitListener(queues = RabbitMQConfig.Q_END_VOTE, concurrency = "3-5", ackMode = "AUTO" )
     public void onEndVote(EndVoteMessage msg) {
         log.info("투표 종료 알림 처리 시작: voteId={}, isQuestioner={}", msg.getVoteId(), msg.isQuestioner());
 
@@ -81,7 +81,7 @@ public class EndVoteWorker {
                 : "[투표 종료] 투표자 알림";
 
         String body = msg.isQuestioner()
-                ? memberName + "님! 만든 투표가 종료되었습니다."
+                ? vote.getPosName()+ "혼잡도 투표가 종료되었습니다."
                 : "참여한 투표가 종료되었습니다.";
 
         Alarm alarm = alarmRepository.save(Alarm.builder()
